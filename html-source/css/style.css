@@ -1,0 +1,20 @@
+.my-footer {
+    height: 4em;
+    background-color: lightslategray;
+    margin-top: 1em;
+    padding: 1em;
+    font-size: 80%; 
+}
+
+.room-image {
+    width: 50%;
+}
+
+/* override styles here */
+.notie-container {
+  box-shadow: none;
+}
+
+.datepicker {
+  z-index: 10000;
+}
