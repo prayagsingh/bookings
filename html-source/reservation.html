@@ -11,6 +11,9 @@
     <!-- for custom calender ref: https://mymth.github.io/vanillajs-datepicker/#/?id=using-from-browser -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.4/dist/css/datepicker-bs4.min.css">
 
+    <!-- for alert popups ref: https://github.com/jaredreich/notie#installation   -->
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/notie/dist/notie.min.css">
+
     <!-- custom class in css starts with . -->
     <!-- font-size is 80% of the default font size on screen -->
     <style>
@@ -26,8 +29,9 @@
             width: 50%;
         }
 
-        .redText {
-          color: rgb(252, 8, 8);
+        /* override styles here */
+        .notie-container {
+          box-shadow: none;
         }
 
     </style>
@@ -124,6 +128,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js" integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/" crossorigin="anonymous"></script>
     <!-- for custom calender ref: https://mymth.github.io/vanillajs-datepicker/#/?id=using-from-browser-->
     <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.4/dist/js/datepicker-full.min.js"></script>
+    <!-- for alert popups ref: https://github.com/jaredreich/notie#installation-->  
+    <script src="https://unpkg.com/notie"></script>
+    
     <script>
       
       (function () {
@@ -148,18 +155,25 @@
 
       document.getElementById("colorButton").addEventListener("click", function(){
         
-        let myEl = document.getElementById("myParagraph");
-        if (myEl.classList.contains("redText")) {
-          myEl.classList.remove("redText");
-        } else {
-          myEl.classList.add("redText");
-        }  
+        notify("Notified Successfully", "success");
       })
 
       const elem = document.getElementById('reservation-dates');
       const rangepicker = new DateRangePicker(elem, {
         format: "yyyy-mm-dd"
-      }); 
+      });
+
+      function notify(msg, msgType){
+
+        notie.alert({
+          type: msgType, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
+          text: msg,
+          stay: false, // optional, default = false
+          time: 3, // optional, default = 3, minimum = 1,
+          position: 'top' // optional, default = 'top', enum: ['top', 'bottom']
+        })
+      }
+
     </script>
 
   </body>
