@@ -130,9 +130,10 @@
     <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.4/dist/js/datepicker-full.min.js"></script>
     <!-- for alert popups ref: https://github.com/jaredreich/notie#installation-->  
     <script src="https://unpkg.com/notie"></script>
-    
+    <!-- sweetalert2 ref: https://sweetalert2.github.io/#examples -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
-      
       (function () {
         'use strict'
       
@@ -155,7 +156,8 @@
 
       document.getElementById("colorButton").addEventListener("click", function(){
         
-        notify("Notified Successfully", "success");
+        // notify("Notified Successfully", "success");
+        notifyModal("title", "<em>hello world</em>", "success", "text for the button")
       })
 
       const elem = document.getElementById('reservation-dates');
@@ -171,6 +173,17 @@
           stay: false, // optional, default = false
           time: 3, // optional, default = 3, minimum = 1,
           position: 'top' // optional, default = 'top', enum: ['top', 'bottom']
+        })
+      }
+
+      // sweetalert2 ref: https://sweetalert2.github.io/#examples
+      function notifyModal(title, text, icon, confirmButtonText) {
+
+        Swal.fire({
+          title: title,
+          html: text,
+          icon: icon,
+          confirmButtonText: confirmButtonText
         })
       }
 
