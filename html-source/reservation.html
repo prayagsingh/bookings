@@ -169,10 +169,10 @@
               <div class="col">
                 <div class="row" id="reservations-date-modals">
                     <div class="col d-line p-4 shadow-none">
-                      <input required type="text" class="form-control" name="start" id="start" placeholder="Arrival">
+                      <input disabled required type="text" class="form-control" name="start" id="start" placeholder="Arrival">
                     </div>
                     <div class="col d-line p-4 shadow-none">
-                      <input required type="text" class="form-control" name="end" id="end" placeholder="Departure">
+                      <input disabled required type="text" class="form-control" name="end" id="end" placeholder="Departure">
                     </div>
                 </div>
               </div>
@@ -276,6 +276,8 @@
             backdrop: false,
             focusConfirm: false,
             showCancelButton: true,
+            // this will open the calender for the pop-up when clicked on the button. using `diabled` in input tag
+            // to undo this.
             willOpen: () => {
               const elem = document.getElementById('reservations-date-modals')
               const rp = new DateRangePicker(elem, {
@@ -288,6 +290,11 @@
                 document.getElementById('start').value,
                 document.getElementById('end').value
               ]
+            },
+            // open the calender when the user clicked on the textbox
+            didOpen: () => {
+              document.getElementById('start').removeAttribute("disabled");
+              document.getElementById('end').removeAttribute("disabled");
             }
           })
           
