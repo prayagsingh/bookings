@@ -134,6 +134,9 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
+
+      let attention = Prompt();
+
       (function () {
         'use strict'
       
@@ -157,7 +160,9 @@
       document.getElementById("colorButton").addEventListener("click", function(){
         
         // notify("Notified Successfully", "success");
-        notifyModal("title", "<em>hello world</em>", "success", "text for the button")
+        //notifyModal("title", "<em>hello world</em>", "success", "text for the button")
+        
+        attention.toast();
       })
 
       const elem = document.getElementById('reservation-dates');
@@ -185,6 +190,21 @@
           icon: icon,
           confirmButtonText: confirmButtonText
         })
+      }
+
+      function Prompt() {
+        let toast = function(){
+          console.log("clicked button and got toast");
+        }
+
+        let success = function(){
+          console.log("clicked button and got success");
+        }
+
+        return {
+          toast: toast,
+          success: success
+        }
       }
 
     </script>
