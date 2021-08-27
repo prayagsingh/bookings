@@ -34,6 +34,10 @@
           box-shadow: none;
         }
 
+        .datepicker {
+          z-index: 10000;
+        }
+
     </style>
 
     <title>Hello, world!</title>
@@ -159,12 +163,29 @@
 
       document.getElementById("colorButton").addEventListener("click", function(){
         
+        let html = `
+          <form id="check-availability-form" action="" method="POST" novalidate class="needs-validation">
+            <div class="row">
+              <div class="col">
+                <div class="row" id="reservations-date-modals">
+                    <div class="col d-line p-4 shadow-none">
+                      <input required type="text" class="form-control" name="start" id="start" placeholder="Arrival">
+                    </div>
+                    <div class="col d-line p-4 shadow-none">
+                      <input required type="text" class="form-control" name="end" id="end" placeholder="Departure">
+                    </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        `
         // notify("Notified Successfully", "success");
         //notifyModal("title", "<em>hello world</em>", "success", "text for the button")
         
         //attention.toast({msg: "hello world", icon: "error", timer: 2000});
         //attention.icon({msg: "hello world", icon: "success"});
-        attention.icon({msg: "hello world", icon: "error"});
+        //attention.icon({msg: "hello world", icon: "error"});
+        attention.custom({msg: html, title:"Choose your dates"});
 
       })
 
@@ -240,9 +261,45 @@
           })
         }
 
+        // for multiple inputs using sweetalert2
+        // await can only be used with async func
+        async function custom(c) {
+
+          const {
+            msg = "",
+            title = "",
+          } = c;
+
+          const { value: formValues } = await Swal.fire({
+            title: title,
+            html: msg,
+            backdrop: false,
+            focusConfirm: false,
+            showCancelButton: true,
+            willOpen: () => {
+              const elem = document.getElementById('reservations-date-modals')
+              const rp = new DateRangePicker(elem, {
+                format: "yyyy-mm-dd",
+                showOnFocus: true,
+              })
+            },
+            preConfirm: () => {
+              return [
+                document.getElementById('start').value,
+                document.getElementById('end').value
+              ]
+            }
+          })
+          
+          if (formValues) {
+            Swal.fire(JSON.stringify(formValues))
+          }
+        }
+
         return {
           toast: toast,
-          icon: icon
+          icon: icon,
+          custom: custom
         }
       }
 
