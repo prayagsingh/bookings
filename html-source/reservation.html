@@ -162,7 +162,10 @@
         // notify("Notified Successfully", "success");
         //notifyModal("title", "<em>hello world</em>", "success", "text for the button")
         
-        attention.toast();
+        //attention.toast({msg: "hello world", icon: "error", timer: 2000});
+        //attention.icon({msg: "hello world", icon: "success"});
+        attention.icon({msg: "hello world", icon: "error"});
+
       })
 
       const elem = document.getElementById('reservation-dates');
@@ -193,17 +196,53 @@
       }
 
       function Prompt() {
-        let toast = function(){
-          console.log("clicked button and got toast");
+        let toast = function(c){
+
+          const {
+            msg = "",
+            icon = "success",
+            position = "top-end",
+            timer = 3000
+          } = c;
+
+          // ref: https://sweetalert2.github.io/ and search for Toast
+          const Toast = Swal.mixin({
+            toast: true,
+            title: msg,
+            icon: icon,
+            position: position,
+            showConfirmButton: false,
+            timer: timer,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+          })
+          
+          Toast.fire({})
         }
 
-        let success = function(){
-          console.log("clicked button and got success");
+        let icon = function(c){
+
+          const {
+            msg = "",
+            icon= "success",
+            title= "",
+            footer = "",
+          } = c;
+
+          const Success = Swal.fire({
+            icon: icon,
+            title: title,
+            text: msg,
+            footer: footer
+          })
         }
 
         return {
           toast: toast,
-          success: success
+          icon: icon
         }
       }
 
