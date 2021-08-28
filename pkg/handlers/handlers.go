@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"log"
 	"net"
 	"net/http"
@@ -43,7 +44,7 @@ func (m *Repository) Home(rw http.ResponseWriter, r *http.Request) {
 	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
 	m.App.Session.Put(r.Context(), "remote_port", remotePort)
 	//fmt.Printf("\nrequest url path is: %s\n", r.URL.Path)
-	render.RenderTemplate(rw, "home.page.html", &models.TemplateData{})
+	render.RenderTemplate(rw, r, "home.page.html", &models.TemplateData{})
 
 }
 
@@ -57,7 +58,7 @@ func (m *Repository) About(rw http.ResponseWriter, r *http.Request) {
 	stringMap["remote_ip"] = remoteIp
 	stringMap["remote_port"] = remotePort
 
-	render.RenderTemplate(rw, "about.page.html", &models.TemplateData{
+	render.RenderTemplate(rw, r, "about.page.html", &models.TemplateData{
 		StringMap: stringMap,
 	})
 }
@@ -65,35 +66,38 @@ func (m *Repository) About(rw http.ResponseWriter, r *http.Request) {
 // Reservations renders a make a reservation page and displays form
 func (m *Repository) Reservations(rw http.ResponseWriter, r *http.Request) {
 
-	render.RenderTemplate(rw, "make-reservation.page.html", &models.TemplateData{})
+	render.RenderTemplate(rw, r, "make-reservation.page.html", &models.TemplateData{})
 }
 
 // Villas renders the room page
 func (m *Repository) Villas(rw http.ResponseWriter, r *http.Request) {
 
-	render.RenderTemplate(rw, "villas.page.html", &models.TemplateData{})
+	render.RenderTemplate(rw, r, "villas.page.html", &models.TemplateData{})
 }
 
 // Suites renders the room page
 func (m *Repository) Suites(rw http.ResponseWriter, r *http.Request) {
 
-	render.RenderTemplate(rw, "suites.page.html", &models.TemplateData{})
+	render.RenderTemplate(rw, r, "suites.page.html", &models.TemplateData{})
 }
 
 // Availability renders the search availability page
 func (m *Repository) Availability(rw http.ResponseWriter, r *http.Request) {
 
-	render.RenderTemplate(rw, "search-availability.page.html", &models.TemplateData{})
+	render.RenderTemplate(rw, r, "search-availability.page.html", &models.TemplateData{})
 }
 
 // Availability renders the search availability page
 func (m *Repository) PostAvailability(rw http.ResponseWriter, r *http.Request) {
+	// fetching values from the form using ID's mentioned in the form
+	start := r.Form.Get("start")
+	end := r.Form.Get("end")
 
-	rw.Write([]byte("Post to search availability"))
+	rw.Write([]byte(fmt.Sprintf("Start date is %s and End date is %s", start, end)))
 }
 
 // Contact renders the search contact page
 func (m *Repository) Contact(rw http.ResponseWriter, r *http.Request) {
 
-	render.RenderTemplate(rw, "contact.page.html", &models.TemplateData{})
+	render.RenderTemplate(rw, r, "contact.page.html", &models.TemplateData{})
 }
