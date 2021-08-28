@@ -57,13 +57,19 @@
                 </div>
             </form>
         `
-        // notify("Notified Successfully", "success");
-        //notifyModal("title", "<em>hello world</em>", "success", "text for the button")
+        attention.custom({
+            msg: html,
+            title: "Choose your dates",
+            callback: function(result){
+                console.log("called");
 
-        //attention.toast({msg: "hello world", icon: "error", timer: 2000});
-        //attention.icon({msg: "hello world", icon: "success"});
-        //attention.icon({msg: "hello world", icon: "error"});
-        attention.custom({ msg: html, title: "Choose your dates" });
+                fetch("/search-availability-json")
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                    })
+            }
+        });
 
     })
 </script>

@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net"
@@ -87,13 +88,35 @@ func (m *Repository) Availability(rw http.ResponseWriter, r *http.Request) {
 	render.RenderTemplate(rw, r, "search-availability.page.html", &models.TemplateData{})
 }
 
-// Availability renders the search availability page
+// PostAvailability renders the search availability page
 func (m *Repository) PostAvailability(rw http.ResponseWriter, r *http.Request) {
 	// fetching values from the form using ID's mentioned in the form
 	start := r.Form.Get("start")
 	end := r.Form.Get("end")
 
 	rw.Write([]byte(fmt.Sprintf("Start date is %s and End date is %s", start, end)))
+}
+
+// AvailabiltyJSON is using it to build JSON response. Scope is limited
+type jsonResponse struct {
+	OK      bool   `json:"ok"`
+	Message string `json:"message"`
+}
+
+// AvailabilityJSON handles request for availability and sends JSON response.
+func (m *Repository) AvailabilityJSON(rw http.ResponseWriter, r *http.Request) {
+	resp := jsonResponse{
+		OK:      true,
+		Message: "Available!",
+	}
+
+	out, err := json.MarshalIndent(resp, "", "  ")
+	if err != nil {
+		log.Println("Error in marshelling and error is: ", err)
+	}
+
+	rw.Header().Set("Content-Type", "application/json")
+	rw.Write(out)
 }
 
 // Contact renders the search contact page

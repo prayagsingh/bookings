@@ -198,7 +198,7 @@
                     title = "",
                 } = c;
 
-                const { value: formValues } = await Swal.fire({
+                const { value: result } = await Swal.fire({
                     title: title,
                     html: msg,
                     backdrop: false,
@@ -226,8 +226,22 @@
                     }
                 })
 
-                if (formValues) {
-                    Swal.fire(JSON.stringify(formValues))
+                // this is for booking rooms and checking availability of the rooms in the background
+                if (result) {
+                    // result.dismiss is not exactly(!==) to Swal.DismissReason.canel i.e
+                    // if they didn't hit the cancel button then
+                    if (result.dismiss !== Swal.DismissReason.cancel) {
+                        if (result.value !== "") {
+                            // calling a callback on client page when someone fills a form
+                            if (c.callback !== undefined) {
+                                c.callback(result);
+                            } 
+                        } else {
+                            c.callback(false);
+                        }
+                    } else {
+                        c.callback(false);
+                    }
                 }
             }
 
