@@ -1,29 +1,246 @@
 <!-- Below directives is specific to golang template -->
 <!-- In the block section "." means we are passing data and inside the block we can pass things which are custom to specific page -->
 {{define "base"}}
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-        <!-- below link is from getbootstrap.com/geeting-started -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" 
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
 
-        {{block "css" .}}
+    <!-- for custom calender ref: https://mymth.github.io/vanillajs-datepicker/#/?id=using-from-browser -->
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.4/dist/css/datepicker-bs4.min.css">
 
-        {{end}}
-    </head>
-    <body>
-        {{block "content" .}}
+    <!-- for alert popups ref: https://github.com/jaredreich/notie#installation   -->
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/notie/dist/notie.min.css">
 
-        {{end}}
+    <!-- custom class in css starts with . -->
+    <!-- font-size is 80% of the default font size on screen -->
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
 
-        {{block "js" .}}
+    <title>Hello, world!</title>
+</head>
 
-        {{end}}
-    </body>
-    </html>
+<body>
+    <!-- reference for below config: https://getbootstrap.com/ -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About Us</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Rooms
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/villas">Villas</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="/suites">Suites</a></li>
+
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/search-availability" tabindex="-1" aria-disabled="true">Book Now</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contact" tabindex="-1" aria-disabled="true">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {{block "content" .}}
+
+    {{end}}
+
+    <!-- always put footer outside the container to avoid the left and right spaces-->
+    <div class="row my-footer">
+        <div class="col">
+            Left
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
+        integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js"
+        integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/"
+        crossorigin="anonymous"></script>
+    <!-- for custom calender ref: https://mymth.github.io/vanillajs-datepicker/#/?id=using-from-browser-->
+    <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.4/dist/js/datepicker-full.min.js"></script>
+    <!-- for alert popups ref: https://github.com/jaredreich/notie#installation-->
+    <script src="https://unpkg.com/notie"></script>
+    <!-- sweetalert2 ref: https://sweetalert2.github.io/#examples -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    {{block "js" .}}
+
+    {{end}}
+
+    <script>
+
+        let attention = Prompt();
+
+        (function () {
+            'use strict'
+
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.querySelectorAll('.needs-validation')
+
+            // Loop over them and prevent submission
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+
+        function notify(msg, msgType) {
+
+            notie.alert({
+                type: msgType, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
+                text: msg,
+                stay: false, // optional, default = false
+                time: 3, // optional, default = 3, minimum = 1,
+                position: 'top' // optional, default = 'top', enum: ['top', 'bottom']
+            })
+        }
+
+        // sweetalert2 ref: https://sweetalert2.github.io/#examples
+        function notifyModal(title, text, icon, confirmButtonText) {
+
+            Swal.fire({
+                title: title,
+                html: text,
+                icon: icon,
+                confirmButtonText: confirmButtonText
+            })
+        }
+
+        function Prompt() {
+            let toast = function (c) {
+
+                const {
+                    msg = "",
+                    icon = "success",
+                    position = "top-end",
+                    timer = 3000
+                } = c;
+
+                // ref: https://sweetalert2.github.io/ and search for Toast
+                const Toast = Swal.mixin({
+                    toast: true,
+                    title: msg,
+                    icon: icon,
+                    position: position,
+                    showConfirmButton: false,
+                    timer: timer,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+
+                Toast.fire({})
+            }
+
+            let icon = function (c) {
+
+                const {
+                    msg = "",
+                    icon = "success",
+                    title = "",
+                    footer = "",
+                } = c;
+
+                const Success = Swal.fire({
+                    icon: icon,
+                    title: title,
+                    text: msg,
+                    footer: footer
+                })
+            }
+
+            // for multiple inputs using sweetalert2
+            // await can only be used with async func
+            async function custom(c) {
+
+                const {
+                    msg = "",
+                    title = "",
+                } = c;
+
+                const { value: formValues } = await Swal.fire({
+                    title: title,
+                    html: msg,
+                    backdrop: false,
+                    focusConfirm: false,
+                    showCancelButton: true,
+                    // this will open the calender for the pop-up when clicked on the button. using `diabled` in input tag
+                    // to undo this.
+                    willOpen: () => {
+                        const elem = document.getElementById('reservations-date-modals')
+                        const rp = new DateRangePicker(elem, {
+                            format: "yyyy-mm-dd",
+                            showOnFocus: true,
+                        })
+                    },
+                    preConfirm: () => {
+                        return [
+                            document.getElementById('start').value,
+                            document.getElementById('end').value
+                        ]
+                    },
+                    // open the calender when the user clicked on the textbox
+                    didOpen: () => {
+                        document.getElementById('start').removeAttribute("disabled");
+                        document.getElementById('end').removeAttribute("disabled");
+                    }
+                })
+
+                if (formValues) {
+                    Swal.fire(JSON.stringify(formValues))
+                }
+            }
+
+            return {
+                toast: toast,
+                icon: icon,
+                custom: custom
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>
 {{end}}

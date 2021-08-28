@@ -42,7 +42,9 @@ func (m *Repository) Home(rw http.ResponseWriter, r *http.Request) {
 	// storing the remote_IP to session
 	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
 	m.App.Session.Put(r.Context(), "remote_port", remotePort)
+	//fmt.Printf("\nrequest url path is: %s\n", r.URL.Path)
 	render.RenderTemplate(rw, "home.page.html", &models.TemplateData{})
+
 }
 
 // About is the handler for the about page
@@ -58,4 +60,34 @@ func (m *Repository) About(rw http.ResponseWriter, r *http.Request) {
 	render.RenderTemplate(rw, "about.page.html", &models.TemplateData{
 		StringMap: stringMap,
 	})
+}
+
+// Reservations renders a make a reservation page and displays form
+func (m *Repository) Reservations(rw http.ResponseWriter, r *http.Request) {
+
+	render.RenderTemplate(rw, "make-reservation.page.html", &models.TemplateData{})
+}
+
+// Villas renders the room page
+func (m *Repository) Villas(rw http.ResponseWriter, r *http.Request) {
+
+	render.RenderTemplate(rw, "villas.page.html", &models.TemplateData{})
+}
+
+// Suites renders the room page
+func (m *Repository) Suites(rw http.ResponseWriter, r *http.Request) {
+
+	render.RenderTemplate(rw, "suites.page.html", &models.TemplateData{})
+}
+
+// Availability renders the search availability page
+func (m *Repository) Availability(rw http.ResponseWriter, r *http.Request) {
+
+	render.RenderTemplate(rw, "search-availability.page.html", &models.TemplateData{})
+}
+
+// Contact renders the search contact page
+func (m *Repository) Contact(rw http.ResponseWriter, r *http.Request) {
+
+	render.RenderTemplate(rw, "contact.page.html", &models.TemplateData{})
 }

@@ -16,7 +16,7 @@
 
     <!-- custom class in css starts with . -->
     <!-- font-size is 80% of the default font size on screen -->
-    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
 
     <title>Hello, world!</title>
   </head>
@@ -88,15 +88,6 @@
                 </form>
             </div>
         </div>
-
-        <div class="row">
-          <div class="col">
-            <p id="myParagraph">This is some text.</p>
-            <p>
-              <button id="colorButton" class="btn btn-outline-secondary">Click me</button>
-            </p>
-          </div>
-        </div>
     </div>
 
     <!-- always put footer outside the container to avoid the left and right spaces-->
@@ -142,7 +133,7 @@
       document.getElementById("colorButton").addEventListener("click", function(){
         
         let html = `
-          <form id="check-availability-form" action="" method="POST" novalidate class="needs-validation">
+          <form id="check-availability-form" action="" method="POST" novalidate class="needs-validation search-form">
             <div class="row">
               <div class="col">
                 <div class="row" id="reservations-date-modals">

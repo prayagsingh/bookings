@@ -4,22 +4,9 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                <h1>This is About Us page</h1>
-                <h2> This is something serious </h2>
-                <h3> Testing templateCache </h3>
-                <p> This came from the template: {{index .StringMap "test"}} </p>
-                <p> 
-                    {{ if ne (index .StringMap "remote_ip") "" }}
-                        Your remote IP address is: {{index .StringMap "remote_ip"}}
-                    {{else}}
-                        I don't know your remote address yet. Please visit <a href="/">Home Page</a> so I can see it.
-                    {{end}}
-                    {{ if ne (index .StringMap "remote_port") "" }}
-                        Your remote IP address is: {{index .StringMap "remote_port"}}
-                    {{else}}
-                        I don't know your remote port yet. Please visit <a href="/">Home Page</a> so I can see it.
-                    {{end}}
-                </p>
+                
+                <h1> This came from the template: {{index .StringMap "test"}} </h1>
+                
             </div>
         </div>
     </div>

@@ -59,6 +59,18 @@ func main() {
 		Handler: routes(&app),
 	}
 
+	// dirPath, err := os.Getwd()
+	// if err != nil {
+	// 	log.Println(err)
+	// }
+	// fmt.Println("\ncurrent directory is: ", dirPath)
+
+	// execPath, err := os.Executable()
+	// if err != nil {
+	// 	log.Println(err)
+	// }
+	// fmt.Println("\n executable path is: ", execPath)
+
 	err = srv.ListenAndServe()
 	if err != nil {
 		log.Fatal(err)

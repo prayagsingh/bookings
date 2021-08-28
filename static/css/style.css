@@ -18,3 +18,7 @@
 .datepicker {
   z-index: 10000;
 }
+
+.search-form {
+  max-width: 95%;
+}

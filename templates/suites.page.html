@@ -1,0 +1,69 @@
+{{template "base" .}}
+
+{{define "content"}}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <!-- img-fluid makes image responsive-->
+            <!-- ref: https://getbootstrap.com/docs/5.1/content/images/-->
+            <img src="/static/images/suites.png" class="img-fluid img-thumbnail rounded mx-auto d-block room-image"
+                alt="suites image">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <!-- mt stands for margin from top-->
+            <h1 class="text-center mt-4">Aisa Fort Suites</h1>
+            <p>
+                Your home away from home and incredible place to stay
+                Your home away from home and incredible place to stay
+                Your home away from home and incredible place to stay
+                Your home away from home and incredible place to stay
+                Your home away from home and incredible place to stay
+                Your home away from home and incredible place to stay
+                Your home away from home and incredible place to stay
+                Your home away from home and incredible place to stay
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col text-center">
+            <!-- <button type="button" class="btn btn-success">Make Reservation Now</button> -->
+            <a href="#!" id="check-availability-button" class="btn btn-success">Check Availability</a>
+        </div>
+    </div>
+</div>
+{{end}}
+
+{{define "js"}}
+<script>
+    document.getElementById("check-availability-button").addEventListener("click", function () {
+
+        let html = `
+            <form id="check-availability-form" action="" method="POST" novalidate class="needs-validation search-form">
+                <div class="row">
+                <div class="col">
+                    <div class="row" id="reservations-date-modals">
+                        <div class="col d-line p-4 shadow-none">
+                        <input disabled required type="text" class="form-control" name="start" id="start" placeholder="Arrival">
+                        </div>
+                        <div class="col d-line p-4 shadow-none">
+                        <input disabled required type="text" class="form-control" name="end" id="end" placeholder="Departure">
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </form>
+        `
+        // notify("Notified Successfully", "success");
+        //notifyModal("title", "<em>hello world</em>", "success", "text for the button")
+
+        //attention.toast({msg: "hello world", icon: "error", timer: 2000});
+        //attention.icon({msg: "hello world", icon: "success"});
+        //attention.icon({msg: "hello world", icon: "error"});
+        attention.custom({ msg: html, title: "Choose your dates" });
+
+    })
+</script>
+{{end}}
