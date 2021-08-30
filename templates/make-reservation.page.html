@@ -14,6 +14,7 @@
 
 
             <form action="/make-reservation" method="post" novalidate class="needs-validation">
+                <!--input type="hidden" name="csrf_token" value="{{.CSRFToken}}"-->
                 <div class="col-md-4">
                     <label for="first_name" class="form-label">First Name:</label>
                     <input type="text" class="form-control" id="first_name" autocomplete="off" required>

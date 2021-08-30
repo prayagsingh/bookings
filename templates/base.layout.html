@@ -204,14 +204,11 @@
                     backdrop: false,
                     focusConfirm: false,
                     showCancelButton: true,
-                    // this will open the calender for the pop-up when clicked on the button. using `diabled` in input tag
-                    // to undo this.
+                    
                     willOpen: () => {
-                        const elem = document.getElementById('reservations-date-modals')
-                        const rp = new DateRangePicker(elem, {
-                            format: "yyyy-mm-dd",
-                            showOnFocus: true,
-                        })
+                        if (c.willOpen !== undefined) {
+                            c.willOpen();
+                        }
                     },
                     preConfirm: () => {
                         return [
@@ -221,8 +218,9 @@
                     },
                     // open the calender when the user clicked on the textbox
                     didOpen: () => {
-                        document.getElementById('start').removeAttribute("disabled");
-                        document.getElementById('end').removeAttribute("disabled");
+                        if (c.didOpen !== undefined) {
+                            c.didOpen();
+                        }
                     }
                 })
 
@@ -248,7 +246,7 @@
             return {
                 toast: toast,
                 icon: icon,
-                custom: custom
+                custom: custom,
             }
         }
 

@@ -38,6 +38,7 @@
 {{end}}
 
 {{define "js"}}
+
 <script>
     document.getElementById("check-availability-button").addEventListener("click", function () {
 
@@ -45,7 +46,7 @@
             <form id="check-availability-form" action="" method="POST" novalidate class="needs-validation search-form">
                 <div class="row">
                 <div class="col">
-                    <div class="row" id="reservations-date-modals">
+                    <div class="row" id="reservation-date-modal">
                         <div class="col d-line p-4 shadow-none">
                         <input disabled required type="text" class="form-control" name="start" id="start" placeholder="Arrival">
                         </div>
@@ -60,15 +61,40 @@
         attention.custom({
             msg: html,
             title: "Choose your dates",
+
+            // this will open the calender for the pop-up when clicked on the button. using `disabled` in input tag to undo this.
+            willOpen: () => {
+                const elem = document.getElementById('reservation-date-modal')
+                const rp = new DateRangePicker(elem, {
+                    format: "yyyy-mm-dd",
+                    showOnFocus: true,
+                })
+            },
+
+            didOpen: () => {
+                document.getElementById('start').removeAttribute("disabled");
+                document.getElementById('end').removeAttribute("disabled");
+            },
+
             callback: function(result){
                 console.log("called");
 
-                fetch("/search-availability-json")
+                let form = document.getElementById("check-availability-form");
+                    let formData = new FormData(form);
+                    formData.append("csrf_token", "{{.CSRFToken}}");
+
+                    fetch('/search-availability-json', {
+                        method: "post",
+                        body: formData,
+                    })
                     .then(response => response.json())
                     .then(data => {
                         console.log(data);
+                        console.log(data.ok);
+                        console.log(data.message);
                     })
-            }
+            },
+
         });
 
     })

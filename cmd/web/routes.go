@@ -14,6 +14,7 @@ func routes(app *config.AppConfig) http.Handler {
 	mux := chi.NewRouter()
 	mux.Use(middleware.Recoverer)
 
+	// this will return BAD request if any request don't have a valid csrf token
 	mux.Use(NoSurf)
 	mux.Use(SessionLoad)
 	mux.Get("/", handlers.Repo.Home)
@@ -22,7 +23,7 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Get("/suites", handlers.Repo.Suites)
 	mux.Get("/search-availability", handlers.Repo.Availability)
 	mux.Post("/search-availability", handlers.Repo.PostAvailability)
-	mux.Get("/search-availability-json", handlers.Repo.AvailabilityJSON)
+	mux.Post("/search-availability-json", handlers.Repo.AvailabilityJSON)
 	mux.Get("/contact", handlers.Repo.Contact)
 	mux.Get("/make-reservation", handlers.Repo.Reservations)
 
