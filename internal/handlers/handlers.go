@@ -7,9 +7,9 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/prayagsingh/bookings/pkg/config"
-	"github.com/prayagsingh/bookings/pkg/models"
-	"github.com/prayagsingh/bookings/pkg/render"
+	"github.com/prayagsingh/bookings/internal/config"
+	"github.com/prayagsingh/bookings/internal/models"
+	"github.com/prayagsingh/bookings/internal/render"
 )
 
 // Repo the repository used by the handlers
