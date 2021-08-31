@@ -35,19 +35,31 @@
 
                 <div class="col-md-4">
                     <label for="last_name" class="form-label">Last name:</label>
-                    <input name="last_name" type="text" class="form-control"
+                    {{with .Form.Errors.Get "last_name"}}
+                    <!-- . below will displays whatever the value from form errors get -->
+                    <label class="text-danger" >{{.}}</label>
+                    {{end}}
+                    <input name="last_name" type="text" class="form-control {{with .Form.Errors.Get "last_name"}} is-invalid {{end}}"
                      id="last_name" value="{{$res.LastName}}" autocomplete="off" required>                    
                 </div>
 
                 <div class="col-md-4">
                     <label for="email" class="form-label">Email:</label>
-                    <input name="email" type="email" class="form-control"
+                    {{with .Form.Errors.Get "email"}}
+                    <!-- . below will displays whatever the value from form errors get -->
+                    <label class="text-danger" >{{.}}</label>
+                    {{end}}
+                    <input name="email" type="email" class="form-control {{with .Form.Errors.Get "email"}} is-invalid {{end}}"
                      id="email" value="{{$res.Email}}" autocomplete="off" required>                    
                 </div>
 
                 <div class="col-md-4">
+                    {{with .Form.Errors.Get "phone"}}
+                    <!-- . below will displays whatever the value from form errors get -->
+                    <label class="text-danger" >{{.}}</label>
+                    {{end}}
                     <label for="phone" class="form-label">Contact:</label>
-                    <input name="phone" type="text" class="form-control"
+                    <input name="phone" type="text" class="form-control {{with .Form.Errors.Get "phone"}} is-invalid {{end}}"
                      id="phone" value="{{$res.Phone}}" autocomplete="off" required>                    
                 </div>
 

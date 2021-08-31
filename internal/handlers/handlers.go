@@ -99,8 +99,9 @@ func (m *Repository) PostReservations(rw http.ResponseWriter, r *http.Request) {
 	// creating a form object to check our data
 	form := forms.New(r.PostForm)
 
-	form.Has("first_name", r)
-	form.Has("last_name", r)
+	// using below in make-reservation page for showing warnings
+	form.Required("first_name", "last_name", "email")
+	form.MinLength("first_name", 3, r)
 
 	if !form.Valid() {
 
