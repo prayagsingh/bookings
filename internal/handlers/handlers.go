@@ -116,6 +116,15 @@ func (m *Repository) PostReservations(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// showing the reservation summary using session.  to do this we have to pass the reservation
+	// object to session and when we get to reservation-sumary page then we will pull out the object
+	// from Session and finally sent it to the template and display the information
+	m.App.Session.Put(r.Context(), "reservation", reservation)
+
+	// To avoid the people accidently submit the form twice, any time we recieve the POST request
+	// we should directs the user to another page with a HTTP redirect 303
+	http.Redirect(rw, r, "/reservation-summary", http.StatusSeeOther)
+
 }
 
 // Villas renders the room page
@@ -171,4 +180,29 @@ func (m *Repository) AvailabilityJSON(rw http.ResponseWriter, r *http.Request) {
 func (m *Repository) Contact(rw http.ResponseWriter, r *http.Request) {
 
 	render.RenderTemplate(rw, r, "contact.page.html", &models.TemplateData{})
+}
+
+// ReservationSummary
+func (m *Repository) ReservationSummary(rw http.ResponseWriter, r *http.Request) {
+
+	// doing type assert(added models.Reservation) to identify what type of session it is.
+	reservation, ok := m.App.Session.Get(r.Context(), "reservation").(models.Reservation)
+	if !ok {
+		// if a user directly went to /reservation-summary page directly then it will show empty page
+		// because of lack of session hence we have to show them something if they directly went to
+		// reservation-summary page
+		m.App.Session.Put(r.Context(), "error", "can't get reservation from the session")
+		http.Redirect(rw, r, "/", http.StatusTemporaryRedirect)
+
+		return
+	}
+
+	// removing the reservation from session
+	m.App.Session.Remove(r.Context(), "reservation")
+
+	data := make(map[string]interface{})
+	data["reservation"] = reservation
+	render.RenderTemplate(rw, r, "reservation-summary.page.html", &models.TemplateData{
+		Data: data,
+	})
 }

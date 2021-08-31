@@ -25,6 +25,13 @@ func NewTemplate(a *config.AppConfig) {
 // AddDefaultData adds data for all the templates
 func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateData {
 
+	// if a user directly went to /reservation-summary page directly then it will show empty page
+	// because of lack of session hence we have to show them something if they directly went to
+	// reservation-summary page
+	td.Flash = app.Session.PopString(r.Context(), "flash")
+	td.Error = app.Session.PopString(r.Context(), "error")
+	td.Warning = app.Session.PopString(r.Context(), "warning")
+
 	td.CSRFToken = nosurf.Token(r)
 
 	return td
