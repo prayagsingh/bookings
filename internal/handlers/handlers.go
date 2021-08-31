@@ -102,6 +102,7 @@ func (m *Repository) PostReservations(rw http.ResponseWriter, r *http.Request) {
 	// using below in make-reservation page for showing warnings
 	form.Required("first_name", "last_name", "email")
 	form.MinLength("first_name", 3, r)
+	form.IsEmail("email")
 
 	if !form.Valid() {
 
