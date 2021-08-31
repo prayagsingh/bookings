@@ -13,11 +13,22 @@
 
 
 
-            <form action="/make-reservation" method="post" novalidate class="needs-validation">
-                <!--input type="hidden" name="csrf_token" value="{{.CSRFToken}}"-->
+            <!--form action="/make-reservation" method="post" novalidate class="needs-validation"-->
+            <form action="/make-reservation" method="post" class="" novalidate>
+
+                <!-- to avoid BAD request and csrf issue -->
+                <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+
                 <div class="col-md-4">
                     <label for="first_name" class="form-label">First Name:</label>
-                    <input type="text" class="form-control" id="first_name" autocomplete="off" required>
+                    <!-- printing errors using server-side validation if the first_name is empty-->
+                    {{with .Form.Errors.Get "first_name"}}
+                    <!-- . below will displays whatever the value from form errors get -->
+                    <label class="text-danger" >{{.}}</label>
+                    {{end}}
+                    <!-- showing warning sign in text-box at right side using go template pattern and is-invalid class -->
+                    <input type="text" class="form-control {{with .Form.Errors.Get "first_name"}} is-invalid {{end}}"
+                     id="first_name" autocomplete="off" required>
                     <div class="valid-feedback">
                         Looks good!
                     </div>
@@ -48,7 +59,8 @@
                 </div>
 
                 <hr>
-                <input type="submit" class="btn btn-primary" value="Make Reservation">
+                <input href type="submit" class="btn btn-primary" value="Make Reservation">
+                
             </form>
         </div>
     </div>

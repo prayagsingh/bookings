@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"github.com/prayagsingh/bookings/internal/config"
+	"github.com/prayagsingh/bookings/internal/forms"
 	"github.com/prayagsingh/bookings/internal/models"
 	"github.com/prayagsingh/bookings/internal/render"
 )
@@ -67,7 +68,45 @@ func (m *Repository) About(rw http.ResponseWriter, r *http.Request) {
 // Reservations renders a make a reservation page and displays form
 func (m *Repository) Reservations(rw http.ResponseWriter, r *http.Request) {
 
-	render.RenderTemplate(rw, r, "make-reservation.page.html", &models.TemplateData{})
+	render.RenderTemplate(rw, r, "make-reservation.page.html", &models.TemplateData{
+		Form: forms.New(nil),
+	})
+}
+
+// PostReservations handles the posting of a reservation form
+func (m *Repository) PostReservations(rw http.ResponseWriter, r *http.Request) {
+
+	err := r.ParseForm()
+	if err != nil {
+		log.Println("Error in parsing form data and error is ", err)
+		return
+	}
+
+	reservation := models.Reservation{
+		FirstName: r.Form.Get("first_name"),
+		LastName:  r.Form.Get("last_name"),
+		Email:     r.Form.Get("email"),
+		Phone:     r.Form.Get("phone"),
+	}
+
+	// creating a form object to check our data
+	form := forms.New(r.PostForm)
+
+	form.Has("first_name", r)
+	form.Has("last_name", r)
+
+	if !form.Valid() {
+
+		data := make(map[string]interface{})
+		data["reservation"] = reservation
+
+		render.RenderTemplate(rw, r, "make-reservation.page.html", &models.TemplateData{
+			Form: form,
+			Data: data,
+		})
+		return
+	}
+
 }
 
 // Villas renders the room page
