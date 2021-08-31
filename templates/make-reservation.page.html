@@ -11,8 +11,9 @@
             <p><strong>Reservation Details</strong><br>
             </p>
 
-
-
+            <!-- storing the values of empty reservation in res when the first time this page is displayed -->
+            <!-- here Data is of type Map in TemplateData struct and "reservation" is the key -->
+            {{$res := index .Data "reservation"}}
             <!--form action="/make-reservation" method="post" novalidate class="needs-validation"-->
             <form action="/make-reservation" method="post" class="" novalidate>
 
@@ -27,35 +28,27 @@
                     <label class="text-danger" >{{.}}</label>
                     {{end}}
                     <!-- showing warning sign in text-box at right side using go template pattern and is-invalid class -->
-                    <input type="text" class="form-control {{with .Form.Errors.Get "first_name"}} is-invalid {{end}}"
-                     id="first_name" autocomplete="off" required>
-                    <div class="valid-feedback">
-                        Looks good!
-                    </div>
+                    <!-- `name` attribute must be present in `input` element to fetch the values from Form in go code -->
+                    <input name="first_name" type="text" class="form-control {{with .Form.Errors.Get "first_name"}} is-invalid {{end}}"
+                     id="first_name" value="{{$res.FirstName}}" autocomplete="off" required>                    
                 </div>
 
                 <div class="col-md-4">
                     <label for="last_name" class="form-label">Last name:</label>
-                    <input type="text" class="form-control" id="last_name" autocomplete="off" required>
-                    <div class="valid-feedback">
-                        Looks good!
-                    </div>
+                    <input name="last_name" type="text" class="form-control"
+                     id="last_name" value="{{$res.LastName}}" autocomplete="off" required>                    
                 </div>
 
                 <div class="col-md-4">
                     <label for="email" class="form-label">Email:</label>
-                    <input type="email" class="form-control" id="email" autocomplete="off" required>
-                    <div class="valid-feedback">
-                        Looks good!
-                    </div>
+                    <input name="email" type="email" class="form-control"
+                     id="email" value="{{$res.Email}}" autocomplete="off" required>                    
                 </div>
 
                 <div class="col-md-4">
                     <label for="phone" class="form-label">Contact:</label>
-                    <input type="text" class="form-control" id="phone" autocomplete="off" required>
-                    <div class="valid-feedback">
-                        Looks good!
-                    </div>
+                    <input name="phone" type="text" class="form-control"
+                     id="phone" value="{{$res.Phone}}" autocomplete="off" required>                    
                 </div>
 
                 <hr>

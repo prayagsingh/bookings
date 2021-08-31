@@ -1,7 +1,6 @@
 package forms
 
 import (
-	"fmt"
 	"net/http"
 	"net/url"
 )
@@ -13,7 +12,7 @@ type Form struct {
 }
 
 //Valid returns true if there are no errors
-func(f *Form) Valid() bool {
+func (f *Form) Valid() bool {
 
 	// returns true if error is empty
 	return len(f.Errors) == 0
@@ -34,7 +33,7 @@ func New(data url.Values) *Form {
 func (f *Form) Has(field string, r *http.Request) bool {
 
 	x := r.Form.Get(field)
-	fmt.Println("value of x is: ", x)
+	//fmt.Println("value of x is: ", x)
 	if x == "" {
 
 		f.Errors.Add(field, "This field can't be blank")

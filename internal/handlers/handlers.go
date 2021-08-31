@@ -68,14 +68,21 @@ func (m *Repository) About(rw http.ResponseWriter, r *http.Request) {
 // Reservations renders a make a reservation page and displays form
 func (m *Repository) Reservations(rw http.ResponseWriter, r *http.Request) {
 
+	var emptyReservation models.Reservation
+
+	data := make(map[string]interface{})
+	data["reservation"] = emptyReservation
+
 	render.RenderTemplate(rw, r, "make-reservation.page.html", &models.TemplateData{
 		Form: forms.New(nil),
+		Data: data,
 	})
 }
 
 // PostReservations handles the posting of a reservation form
 func (m *Repository) PostReservations(rw http.ResponseWriter, r *http.Request) {
 
+	// `name` attribute must be present in `input` element to fetch the values from Form
 	err := r.ParseForm()
 	if err != nil {
 		log.Println("Error in parsing form data and error is ", err)
