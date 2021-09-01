@@ -32,7 +32,7 @@ func TestMain(t *testing.M) {
 	// initializng error logger
 	// Lshotfile will give the info about the error
 	errorLog := log.New(os.Stdout, "Error:\t", log.Ldate|log.Ltime|log.Lshortfile)
-	// make infoLog app wide variable
+	// make errorLog app wide variable
 	testApp.ErrorLog = errorLog
 
 	session = scs.New()
