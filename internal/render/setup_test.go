@@ -2,6 +2,7 @@ package render
 
 import (
 	"encoding/gob"
+	"log"
 	"net/http"
 	"os"
 	"testing"
@@ -23,6 +24,17 @@ func TestMain(t *testing.M) {
 	// set it to true when in production
 	testApp.InProduction = false
 
+	// initialzing logger and printing logs to terminal
+	infoLog := log.New(os.Stdout, "INFO:\t", log.Ldate|log.Ltime)
+	// make infoLog app wide variable
+	testApp.InfoLog = infoLog
+
+	// initializng error logger
+	// Lshotfile will give the info about the error
+	errorLog := log.New(os.Stdout, "Error:\t", log.Ldate|log.Ltime|log.Lshortfile)
+	// make infoLog app wide variable
+	testApp.ErrorLog = errorLog
+
 	session = scs.New()
 	session.Lifetime = 24 * time.Hour
 	session.Cookie.Persist = true
@@ -38,7 +50,7 @@ func TestMain(t *testing.M) {
 }
 
 // creating a http writer to server TestRenderTemplate
-type myWriter struct {}
+type myWriter struct{}
 
 func (tw *myWriter) Header() http.Header {
 	var h http.Header

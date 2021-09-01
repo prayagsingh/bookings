@@ -3,12 +3,11 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"log"
-	"net"
 	"net/http"
 
 	"github.com/prayagsingh/bookings/internal/config"
 	"github.com/prayagsingh/bookings/internal/forms"
+	"github.com/prayagsingh/bookings/internal/helpers"
 	"github.com/prayagsingh/bookings/internal/models"
 	"github.com/prayagsingh/bookings/internal/render"
 )
@@ -37,32 +36,14 @@ func NewHandler(r *Repository) {
 // Home is the handler for the home page
 func (m *Repository) Home(rw http.ResponseWriter, r *http.Request) {
 
-	remoteIP := r.RemoteAddr
-	remoteIP, remotePort, err := net.SplitHostPort(remoteIP)
-	if err != nil {
-		log.Fatalf("Unable to fetch the remoteIP and error is: %s", err)
-	}
-	// storing the remote_IP to session
-	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
-	m.App.Session.Put(r.Context(), "remote_port", remotePort)
-	//fmt.Printf("\nrequest url path is: %s\n", r.URL.Path)
 	render.RenderTemplate(rw, r, "home.page.html", &models.TemplateData{})
 
 }
 
 // About is the handler for the about page
 func (m *Repository) About(rw http.ResponseWriter, r *http.Request) {
-	stringMap := make(map[string]string)
-	stringMap["test"] = "Hello World !!!"
 
-	remoteIp := m.App.Session.GetString(r.Context(), "remote_ip")
-	remotePort := m.App.Session.GetString(r.Context(), "remote_port")
-	stringMap["remote_ip"] = remoteIp
-	stringMap["remote_port"] = remotePort
-
-	render.RenderTemplate(rw, r, "about.page.html", &models.TemplateData{
-		StringMap: stringMap,
-	})
+	render.RenderTemplate(rw, r, "about.page.html", &models.TemplateData{})
 }
 
 // Reservations renders a make a reservation page and displays form
@@ -85,7 +66,7 @@ func (m *Repository) PostReservations(rw http.ResponseWriter, r *http.Request) {
 	// `name` attribute must be present in `input` element to fetch the values from Form
 	err := r.ParseForm()
 	if err != nil {
-		log.Println("Error in parsing form data and error is ", err)
+		helpers.ServerError(rw, err)
 		return
 	}
 
@@ -169,7 +150,8 @@ func (m *Repository) AvailabilityJSON(rw http.ResponseWriter, r *http.Request) {
 
 	out, err := json.MarshalIndent(resp, "", "  ")
 	if err != nil {
-		log.Println("Error in marshelling and error is: ", err)
+		helpers.ServerError(rw, err)
+		return
 	}
 
 	rw.Header().Set("Content-Type", "application/json")
@@ -188,6 +170,7 @@ func (m *Repository) ReservationSummary(rw http.ResponseWriter, r *http.Request)
 	// doing type assert(added models.Reservation) to identify what type of session it is.
 	reservation, ok := m.App.Session.Get(r.Context(), "reservation").(models.Reservation)
 	if !ok {
+		m.App.ErrorLog.Println("can't get error from session")
 		// if a user directly went to /reservation-summary page directly then it will show empty page
 		// because of lack of session hence we have to show them something if they directly went to
 		// reservation-summary page

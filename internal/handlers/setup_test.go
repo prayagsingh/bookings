@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 	"time"
 
@@ -30,6 +31,17 @@ func getRoutes() http.Handler {
 
 	// set it to true when in production
 	app.InProduction = false
+
+	// initialzing logger and printing logs to terminal
+	infoLog := log.New(os.Stdout, "INFO:\t", log.Ldate|log.Ltime)
+	// make infoLog app wide variable
+	app.InfoLog = infoLog
+
+	// initializng error logger
+	// Lshotfile will give the info about the error
+	errorLog := log.New(os.Stdout, "Error:\t", log.Ldate|log.Ltime|log.Lshortfile)
+	// make infoLog app wide variable
+	app.ErrorLog = errorLog
 
 	session = scs.New()
 	session.Lifetime = 24 * time.Hour
