@@ -24,6 +24,26 @@ var session *scs.SessionManager
 
 func main() {
 
+	err := run()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf(fmt.Sprintf("Starting application on port %s\n", portNumber))
+
+	srv := http.Server{
+		Addr:    portNumber,
+		Handler: routes(&app),
+	}
+
+	err = srv.ListenAndServe()
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func run() error {
+
 	// storing info to Session
 	gob.Register(models.Reservation{})
 
@@ -42,6 +62,7 @@ func main() {
 	tc, err := render.CreateTemplateCache()
 	if err != nil {
 		log.Fatal("can't create template cache")
+		return err
 	}
 
 	app.TemplateCache = tc
@@ -57,27 +78,5 @@ func main() {
 
 	render.NewTemplate(&app)
 
-	fmt.Printf(fmt.Sprintf("Starting application on port %s\n", portNumber))
-
-	srv := http.Server{
-		Addr:    portNumber,
-		Handler: routes(&app),
-	}
-
-	// dirPath, err := os.Getwd()
-	// if err != nil {
-	// 	log.Println(err)
-	// }
-	// fmt.Println("\ncurrent directory is: ", dirPath)
-
-	// execPath, err := os.Executable()
-	// if err != nil {
-	// 	log.Println(err)
-	// }
-	// fmt.Println("\n executable path is: ", execPath)
-
-	err = srv.ListenAndServe()
-	if err != nil {
-		log.Fatal(err)
-	}
+	return nil
 }

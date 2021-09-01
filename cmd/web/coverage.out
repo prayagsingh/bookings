@@ -1,0 +1,11 @@
+mode: set
+github.com/prayagsingh/bookings/cmd/web/middleware.go:10.45,23.2 3 1
+github.com/prayagsingh/bookings/cmd/web/middleware.go:26.50,28.2 1 1
+github.com/prayagsingh/bookings/cmd/web/routes.go:12.49,40.2 18 1
+github.com/prayagsingh/bookings/cmd/web/main.go:25.13,28.16 2 0
+github.com/prayagsingh/bookings/cmd/web/main.go:32.2,40.16 4 0
+github.com/prayagsingh/bookings/cmd/web/main.go:28.16,30.3 1 0
+github.com/prayagsingh/bookings/cmd/web/main.go:40.16,42.3 1 0
+github.com/prayagsingh/bookings/cmd/web/main.go:45.18,63.16 10 1
+github.com/prayagsingh/bookings/cmd/web/main.go:68.2,81.12 6 1
+github.com/prayagsingh/bookings/cmd/web/main.go:63.16,66.3 2 0
