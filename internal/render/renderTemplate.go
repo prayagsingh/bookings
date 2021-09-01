@@ -2,9 +2,9 @@ package render
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"html/template"
-	"log"
 	"net/http"
 	"path/filepath"
 
@@ -41,7 +41,7 @@ func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateDa
 }
 
 // RenderTemplate for rendering the template using html/template
-func RenderTemplate(rw http.ResponseWriter, r *http.Request, tmpl string, td *models.TemplateData) {
+func RenderTemplate(rw http.ResponseWriter, r *http.Request, tmpl string, td *models.TemplateData) error {
 
 	var templateCache map[string]*template.Template
 	// In Production load template from template Cache
@@ -57,7 +57,7 @@ func RenderTemplate(rw http.ResponseWriter, r *http.Request, tmpl string, td *mo
 	//fmt.Println("t is ", t.DefinedTemplates())
 
 	if !ok {
-		log.Fatal("Could not get template from template cache")
+		return errors.New("can't get template from cache")
 	}
 
 	buf := new(bytes.Buffer)
@@ -65,14 +65,16 @@ func RenderTemplate(rw http.ResponseWriter, r *http.Request, tmpl string, td *mo
 	err := t.Execute(buf, td)
 	if err != nil {
 		fmt.Println("Error writing parsed template to buffer", err)
-		return
+		return nil
 	}
 	_, err = buf.WriteTo(rw)
 
 	if err != nil {
 		fmt.Println("Error writing template to browser", err)
-		return
+		return nil
 	}
+
+	return nil
 }
 
 // CreateTemplateCache creates a template cache as a map

@@ -1,0 +1,18 @@
+mode: set
+github.com/prayagsingh/bookings/internal/forms/errors.go:6.43,9.2 1 1
+github.com/prayagsingh/bookings/internal/forms/errors.go:12.41,16.27 2 1
+github.com/prayagsingh/bookings/internal/forms/errors.go:20.2,20.23 1 1
+github.com/prayagsingh/bookings/internal/forms/errors.go:16.27,18.3 1 1
+github.com/prayagsingh/bookings/internal/forms/forms.go:18.29,22.2 1 1
+github.com/prayagsingh/bookings/internal/forms/forms.go:25.33,33.2 1 1
+github.com/prayagsingh/bookings/internal/forms/forms.go:36.43,38.31 1 1
+github.com/prayagsingh/bookings/internal/forms/forms.go:38.31,40.37 2 1
+github.com/prayagsingh/bookings/internal/forms/forms.go:40.37,42.4 1 1
+github.com/prayagsingh/bookings/internal/forms/forms.go:47.39,50.13 2 1
+github.com/prayagsingh/bookings/internal/forms/forms.go:53.2,53.13 1 1
+github.com/prayagsingh/bookings/internal/forms/forms.go:50.13,52.3 1 1
+github.com/prayagsingh/bookings/internal/forms/forms.go:57.57,60.21 2 1
+github.com/prayagsingh/bookings/internal/forms/forms.go:65.2,65.13 1 1
+github.com/prayagsingh/bookings/internal/forms/forms.go:60.21,63.3 2 1
+github.com/prayagsingh/bookings/internal/forms/forms.go:69.38,70.40 1 1
+github.com/prayagsingh/bookings/internal/forms/forms.go:70.40,72.3 1 1

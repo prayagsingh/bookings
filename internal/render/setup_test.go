@@ -36,3 +36,21 @@ func TestMain(t *testing.M) {
 
 	os.Exit(t.Run())
 }
+
+// creating a http writer to server TestRenderTemplate
+type myWriter struct {}
+
+func (tw *myWriter) Header() http.Header {
+	var h http.Header
+	return h
+}
+
+func (tw *myWriter) WriteHeader(i int) {
+
+}
+
+func (tw *myWriter) Write(b []byte) (int, error) {
+	length := len(b)
+
+	return length, nil
+}

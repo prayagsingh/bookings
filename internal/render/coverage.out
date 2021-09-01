@@ -1,0 +1,25 @@
+mode: set
+github.com/prayagsingh/bookings/internal/render/renderTemplate.go:24.39,26.2 1 1
+github.com/prayagsingh/bookings/internal/render/renderTemplate.go:29.84,41.2 5 1
+github.com/prayagsingh/bookings/internal/render/renderTemplate.go:44.106,48.18 2 1
+github.com/prayagsingh/bookings/internal/render/renderTemplate.go:55.2,59.9 2 1
+github.com/prayagsingh/bookings/internal/render/renderTemplate.go:63.2,66.16 4 1
+github.com/prayagsingh/bookings/internal/render/renderTemplate.go:70.2,72.16 2 1
+github.com/prayagsingh/bookings/internal/render/renderTemplate.go:77.2,77.12 1 1
+github.com/prayagsingh/bookings/internal/render/renderTemplate.go:48.18,50.3 1 0
+github.com/prayagsingh/bookings/internal/render/renderTemplate.go:50.8,52.3 1 1
+github.com/prayagsingh/bookings/internal/render/renderTemplate.go:59.9,61.3 1 1
+github.com/prayagsingh/bookings/internal/render/renderTemplate.go:66.16,69.3 2 0
+github.com/prayagsingh/bookings/internal/render/renderTemplate.go:72.16,75.3 2 0
+github.com/prayagsingh/bookings/internal/render/renderTemplate.go:81.67,88.16 3 1
+github.com/prayagsingh/bookings/internal/render/renderTemplate.go:92.2,92.29 1 1
+github.com/prayagsingh/bookings/internal/render/renderTemplate.go:123.2,123.21 1 1
+github.com/prayagsingh/bookings/internal/render/renderTemplate.go:88.16,90.3 1 0
+github.com/prayagsingh/bookings/internal/render/renderTemplate.go:92.29,101.17 3 1
+github.com/prayagsingh/bookings/internal/render/renderTemplate.go:105.3,106.17 2 1
+github.com/prayagsingh/bookings/internal/render/renderTemplate.go:110.3,110.23 1 1
+github.com/prayagsingh/bookings/internal/render/renderTemplate.go:118.3,118.21 1 1
+github.com/prayagsingh/bookings/internal/render/renderTemplate.go:101.17,103.4 1 0
+github.com/prayagsingh/bookings/internal/render/renderTemplate.go:106.17,108.4 1 0
+github.com/prayagsingh/bookings/internal/render/renderTemplate.go:110.23,112.18 2 1
+github.com/prayagsingh/bookings/internal/render/renderTemplate.go:112.18,114.5 1 0
