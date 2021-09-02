@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  postgesql:
+    image: postgres:13.4-alpine
+    container_name: postgesql
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      - POSTGRES_USER=CHANGE_HERE
+      - POSTGRES_PASSWORD=CHANGE_HERE
+      - POSTGRES_DB=bookings
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    networks:
+      - postgress_network
+networks:
+  postgress_network:
+    driver: bridge

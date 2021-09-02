@@ -1,2 +1,10 @@
 .vscode
 bookings
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+database.yml
+docker-postgres.yml
+.DB_Store
+*.code-workspace
+schema.sql
+pgdata
