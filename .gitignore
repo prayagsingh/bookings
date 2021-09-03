@@ -8,3 +8,4 @@ docker-postgres.yml
 *.code-workspace
 schema.sql
 pgdata
+_pgdata
