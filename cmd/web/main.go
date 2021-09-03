@@ -10,6 +10,7 @@ import (
 
 	"github.com/alexedwards/scs/v2"
 	"github.com/prayagsingh/bookings/internal/config"
+	"github.com/prayagsingh/bookings/internal/driver"
 	"github.com/prayagsingh/bookings/internal/handlers"
 	"github.com/prayagsingh/bookings/internal/helpers"
 	"github.com/prayagsingh/bookings/internal/models"
@@ -28,10 +29,13 @@ var session *scs.SessionManager
 
 func main() {
 
-	err := run()
+	dbDriver, err := run()
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// close the connection once main is executed
+	defer dbDriver.SQL.Close()
 
 	fmt.Printf(fmt.Sprintf("Starting application on port %s\n", portNumber))
 
@@ -46,7 +50,7 @@ func main() {
 	}
 }
 
-func run() error {
+func run() (*driver.DB, error) {
 
 	// storing info to Session
 	gob.Register(models.Reservation{})
@@ -75,10 +79,21 @@ func run() error {
 
 	app.Session = session
 
+	// connect to DB
+	log.Println("Connection to database...")
+	db, err := driver.ConnectSQL("host=localhost port=5432 dbname=bookings user=postgres password=postgres")
+	if err != nil {
+		log.Fatal("Unable to connect to DB", err)
+	}
+
+	//defer db.Close() we can't close the db connection here since it will close the conn once run func is executed
+	// hence close the db connection
+	log.Println("Successfully connected to database !!!")
+
 	tc, err := render.CreateTemplateCache()
 	if err != nil {
 		log.Fatal("can't create template cache")
-		return err
+		return nil, err
 	}
 
 	app.TemplateCache = tc
@@ -89,11 +104,11 @@ func run() error {
 	app.UseCache = false
 
 	// This allow Handler functions to have access to appConfig via repository
-	repo := handlers.NewRepo(&app)
+	repo := handlers.NewRepo(&app, db)
 	handlers.NewHandler(repo)
 
 	render.NewTemplate(&app)
 	helpers.NewHelpers(&app)
 
-	return nil
+	return db, nil
 }

@@ -66,7 +66,7 @@ func getRoutes() http.Handler {
 	app.UseCache = true
 
 	// This allow Handler functions to have access to appConfig via repository
-	repo := NewRepo(&app)
+	repo := NewRepo(&app, nil)
 	NewHandler(repo)
 
 	render.NewTemplate(&app)
