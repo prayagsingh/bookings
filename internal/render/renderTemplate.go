@@ -20,8 +20,8 @@ var app *config.AppConfig
 // testcases can access the templates from root folder
 var pathToTemplates = "./templates"
 
-// NewTemplate sets the config for the new template package
-func NewTemplate(a *config.AppConfig) {
+// NewRenderer sets the config for the new template package
+func NewRenderer(a *config.AppConfig) {
 	app = a
 }
 
@@ -40,8 +40,8 @@ func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateDa
 	return td
 }
 
-// RenderTemplate for rendering the template using html/template
-func RenderTemplate(rw http.ResponseWriter, r *http.Request, tmpl string, td *models.TemplateData) error {
+// Template for rendering the template using html/template
+func Template(rw http.ResponseWriter, r *http.Request, tmpl string, td *models.TemplateData) error {
 
 	var templateCache map[string]*template.Template
 	// In Production load template from template Cache
