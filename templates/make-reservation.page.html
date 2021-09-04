@@ -25,47 +25,61 @@
                     <!-- printing errors using server-side validation if the first_name is empty-->
                     {{with .Form.Errors.Get "first_name"}}
                     <!-- . below will displays whatever the value from form errors get -->
-                    <label class="text-danger" >{{.}}</label>
+                    <label class="text-danger">{{.}}</label>
                     {{end}}
                     <!-- showing warning sign in text-box at right side using go template pattern and is-invalid class -->
                     <!-- `name` attribute must be present in `input` element to fetch the values from Form in go code -->
-                    <input name="first_name" type="text" class="form-control {{with .Form.Errors.Get "first_name"}} is-invalid {{end}}"
-                     id="first_name" value="{{$res.FirstName}}" autocomplete="off" required>                    
+                    <input name="first_name" type="text" class="form-control {{with .Form.Errors.Get " first_name"}}
+                        is-invalid {{end}}" id="first_name" value="{{$res.FirstName}}" autocomplete="off" required>
                 </div>
 
                 <div class="col-md-4">
                     <label for="last_name" class="form-label">Last name:</label>
                     {{with .Form.Errors.Get "last_name"}}
                     <!-- . below will displays whatever the value from form errors get -->
-                    <label class="text-danger" >{{.}}</label>
+                    <label class="text-danger">{{.}}</label>
                     {{end}}
-                    <input name="last_name" type="text" class="form-control {{with .Form.Errors.Get "last_name"}} is-invalid {{end}}"
-                     id="last_name" value="{{$res.LastName}}" autocomplete="off" required>                    
+                    <input name="last_name" type="text" class="form-control {{with .Form.Errors.Get " last_name"}}
+                        is-invalid {{end}}" id="last_name" value="{{$res.LastName}}" autocomplete="off" required>
                 </div>
 
                 <div class="col-md-4">
                     <label for="email" class="form-label">Email:</label>
                     {{with .Form.Errors.Get "email"}}
                     <!-- . below will displays whatever the value from form errors get -->
-                    <label class="text-danger" >{{.}}</label>
+                    <label class="text-danger">{{.}}</label>
                     {{end}}
-                    <input name="email" type="email" class="form-control {{with .Form.Errors.Get "email"}} is-invalid {{end}}"
-                     id="email" value="{{$res.Email}}" autocomplete="off" required>                    
+                    <input name="email" type="email" class="form-control {{with .Form.Errors.Get " email"}} is-invalid
+                        {{end}}" id="email" value="{{$res.Email}}" autocomplete="off" required>
                 </div>
 
                 <div class="col-md-4">
                     {{with .Form.Errors.Get "phone"}}
                     <!-- . below will displays whatever the value from form errors get -->
-                    <label class="text-danger" >{{.}}</label>
+                    <label class="text-danger">{{.}}</label>
                     {{end}}
                     <label for="phone" class="form-label">Contact:</label>
-                    <input name="phone" type="text" class="form-control {{with .Form.Errors.Get "phone"}} is-invalid {{end}}"
-                     id="phone" value="{{$res.Phone}}" autocomplete="off" required>                    
+                    <input name="phone" type="text" class="form-control {{with .Form.Errors.Get " phone"}} is-invalid
+                        {{end}}" id="phone" value="{{$res.Phone}}" autocomplete="off" required>
                 </div>
+
+                <div class="col-md-4">
+                    <label for="start_date" class="form-label">Start Date</label>
+                    <input name="start_date" type="date" class="form-control" id="start_date" value="{{$res.StartDate}}"
+                        autocomplete="off" required>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="end_date" class="form-label">End Date</label>
+                    <input name="end_date" type="date" class="form-control" id="end_date" value="{{$res.EndDate}}"
+                        autocomplete="off" required>
+                </div>
+
+                <input type="hidden" name="room_id" value="1">
 
                 <hr>
                 <input href type="submit" class="btn btn-primary" value="Make Reservation">
-                
+
             </form>
         </div>
     </div>
