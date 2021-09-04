@@ -129,11 +129,24 @@ func (m *Repository) PostReservations(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	// putting reservation data to DB
-	err = m.DB.InsertReservation(reservation)
+	newReservationID, err := m.DB.InsertReservation(reservation)
 	if err != nil {
 		helpers.ServerError(rw, err)
 	}
 
+	restriction := models.RoomRestriction{
+		RoomID:        roomID,
+		ReservationID: newReservationID,
+		RestrictionID: 1,
+		StartDate:     startDate,
+		EndDate:       endDate,
+	}
+
+	err = m.DB.InserRoomRestriction(restriction)
+	if err != nil {
+		helpers.ServerError(rw, err)
+	}
+	
 	// showing the reservation summary using session.  to do this we have to pass the reservation
 	// object to session and when we get to reservation-sumary page then we will pull out the object
 	// from Session and finally sent it to the template and display the information

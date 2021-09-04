@@ -7,5 +7,6 @@ type DatabaseRepo interface {
 	// Implemented in postgres.go file
 	AllUsers() bool
 
-	InsertReservation(res models.Reservation) error
+	InsertReservation(res models.Reservation) (int,error)
+	InserRoomRestriction(res models.RoomRestriction) error
 }
