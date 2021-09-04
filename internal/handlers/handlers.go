@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
+	"time"
 
 	"github.com/prayagsingh/bookings/internal/config"
 	"github.com/prayagsingh/bookings/internal/driver"
@@ -76,11 +78,34 @@ func (m *Repository) PostReservations(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	sd := r.Form.Get("start_date")
+	ed := r.Form.Get("end_date")
+
+	// casting start_date, end_date of type string to time.Time
+	// ref: 01/02 03:04:05PM '06 -0700
+	// article ref: https://www.pauladamsmith.com/blog/2011/05/go_time.html
+	layout := "2006-01-02"
+	startDate, err := time.Parse(layout, sd)
+	if err != nil {
+		helpers.ServerError(rw, err)
+	}
+
+	endDate, err := time.Parse(layout, ed)
+	if err != nil {
+		helpers.ServerError(rw, err)
+	}
+
+	// fetch room-id
+	roomID, err := strconv.Atoi(r.Form.Get("room_id"))
+
 	reservation := models.Reservation{
 		FirstName: r.Form.Get("first_name"),
 		LastName:  r.Form.Get("last_name"),
 		Email:     r.Form.Get("email"),
 		Phone:     r.Form.Get("phone"),
+		StartDate: startDate,
+		EndDate:   endDate,
+		RoomID:    roomID,
 	}
 
 	// creating a form object to check our data
@@ -101,6 +126,12 @@ func (m *Repository) PostReservations(rw http.ResponseWriter, r *http.Request) {
 			Data: data,
 		})
 		return
+	}
+
+	// putting reservation data to DB
+	err = m.DB.InsertReservation(reservation)
+	if err != nil {
+		helpers.ServerError(rw, err)
 	}
 
 	// showing the reservation summary using session.  to do this we have to pass the reservation
