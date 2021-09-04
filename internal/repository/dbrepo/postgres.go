@@ -103,7 +103,7 @@ func (m *postgresDBRepo) SearchAvailabilityByDatesByRoomID(start_date, end_date 
 }
 
 // SearchAvailabilityForAllRooms returns a slice of rooms for a given date range
-func (m *postgresDBRepo) SearchAvailabilityForAllRooms(start_date, end_date string) ([]models.Room, error) {
+func (m *postgresDBRepo) SearchAvailabilityForAllRooms(start_date, end_date time.Time) ([]models.Room, error) {
 
 	// creating context to make sure that the txn should not open for more than set time like adding a default timeout
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)

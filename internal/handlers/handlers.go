@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -146,7 +145,7 @@ func (m *Repository) PostReservations(rw http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		helpers.ServerError(rw, err)
 	}
-	
+
 	// showing the reservation summary using session.  to do this we have to pass the reservation
 	// object to session and when we get to reservation-sumary page then we will pull out the object
 	// from Session and finally sent it to the template and display the information
@@ -182,7 +181,45 @@ func (m *Repository) PostAvailability(rw http.ResponseWriter, r *http.Request) {
 	start := r.Form.Get("start")
 	end := r.Form.Get("end")
 
-	rw.Write([]byte(fmt.Sprintf("Start date is %s and End date is %s", start, end)))
+	layout := "2006-01-02"
+	startDate, err := time.Parse(layout, start)
+	if err != nil {
+		helpers.ServerError(rw, err)
+	}
+
+	endDate, err := time.Parse(layout, end)
+	if err != nil {
+		helpers.ServerError(rw, err)
+	}
+
+	rooms, err := m.DB.SearchAvailabilityForAllRooms(startDate, endDate)
+	if err != nil {
+		helpers.ServerError(rw, err)
+		return
+	}
+
+	if len(rooms) == 0 {
+		// no room available
+		m.App.Session.Put(r.Context(), "error", "No rooms available !!!")
+		// redirecting with 303 status code
+		http.Redirect(rw, r, "/search-availability", http.StatusSeeOther)
+		return
+	}
+
+	data := make(map[string]interface{})
+
+	data["rooms"] = rooms
+
+	res := models.Reservation{
+		StartDate: startDate,
+		EndDate:   endDate,
+	}
+
+	m.App.Session.Put(r.Context(), "reservation", res)
+
+	render.Template(rw, r, "choose-rooms.page.html", &models.TemplateData{
+		Data: data,
+	})
 }
 
 // AvailabiltyJSON is using it to build JSON response. Scope is limited
