@@ -71,8 +71,8 @@ func (m *postgresDBRepo) InserRoomRestriction(res models.RoomRestriction) error 
 	return nil
 }
 
-// SearchAvailabilityByDates returns true if availability exist for roomID else false
-func (m *postgresDBRepo) SearchAvailabilityByDates(start_date, end_date time.Time, roomID int) (bool, error) {
+// SearchAvailabilityByDatesByRoomID returns true if availability exist for roomID else false
+func (m *postgresDBRepo) SearchAvailabilityByDatesByRoomID(start_date, end_date time.Time, roomID int) (bool, error) {
 
 	// creating context to make sure that the txn should not open for more than set time like adding a default timeout
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
@@ -100,4 +100,43 @@ func (m *postgresDBRepo) SearchAvailabilityByDates(start_date, end_date time.Tim
 		return true, nil
 	}
 	return false, nil
+}
+
+// SearchAvailabilityForAllRooms returns a slice of rooms for a given date range
+func (m *postgresDBRepo) SearchAvailabilityForAllRooms(start_date, end_date string) ([]models.Room, error) {
+
+	// creating context to make sure that the txn should not open for more than set time like adding a default timeout
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	
+	var rooms []models.Room
+	query := `select
+	 	r.id, r.room_name
+	from
+		rooms r
+	where
+		r.id not in (select rr.room_id from room_restrictions rr where $1 < rr.end_date and $2 > rr.start_date);
+	`
+	// Here we are querying multiple rows hence using QueryContext instead of QueryRowContext
+	rows, err := m.DB.QueryContext(ctx, query, start_date, end_date)
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		var room models.Room
+		err = rows.Scan(
+			&room.ID, 
+			&room.RoomName,
+		)
+		if err != nil {
+			return rooms, err
+		}
+		rooms = append(rooms, room)
+	}
+
+	if err = rows.Err(); err != nil {
+		return rooms, err
+	}
+	return rooms, nil
 }
