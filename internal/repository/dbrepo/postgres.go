@@ -3,7 +3,6 @@ package dbrepo
 
 import (
 	"context"
-	"log"
 	"time"
 
 	"github.com/prayagsingh/bookings/internal/models"
@@ -156,7 +155,6 @@ func (m *postgresDBRepo) GetRoomByID(roomID int) (models.Room, error) {
 	if err != nil {
 		return room, err
 	}
-	log.Println("value of room is: ", room)
-	return room, nil
 
+	return room, nil
 }
