@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/go-chi/chi"
 	"github.com/prayagsingh/bookings/internal/config"
 	"github.com/prayagsingh/bookings/internal/driver"
 	"github.com/prayagsingh/bookings/internal/forms"
@@ -275,4 +276,31 @@ func (m *Repository) ReservationSummary(rw http.ResponseWriter, r *http.Request)
 	render.Template(rw, r, "reservation-summary.page.html", &models.TemplateData{
 		Data: data,
 	})
+}
+
+// ChooseRoom
+func (m *Repository) ChooseRoom(rw http.ResponseWriter, r *http.Request) {
+
+	// we need to get the ID from chi router
+	roomID, err := strconv.Atoi(chi.URLParam(r, "id"))
+	//m.App.InfoLog.Println("RoomID is: ", roomID)
+	if err != nil {
+		helpers.ServerError(rw, err)
+		return
+	}
+
+	// now need to get the reservarion variable stored in session then update the room-id and
+	// put the reservation back to session
+	res, ok := m.App.Session.Get(r.Context(), "reservation").(models.Reservation)
+	if !ok {
+		helpers.ServerError(rw, err)
+		return
+	}
+
+	res.RoomID = roomID
+	// putting back the reservation to session after updating the room-id
+	m.App.Session.Put(r.Context(), "reservation", res)
+
+	// redirecting to make-reservation page
+	http.Redirect(rw, r, "/make-reservation", http.StatusSeeOther)
 }
