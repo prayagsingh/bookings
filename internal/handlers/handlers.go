@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strconv"
 	"time"
@@ -57,14 +58,37 @@ func (m *Repository) About(rw http.ResponseWriter, r *http.Request) {
 // Reservations renders a make a reservation page and displays form
 func (m *Repository) Reservations(rw http.ResponseWriter, r *http.Request) {
 
-	var emptyReservation models.Reservation
+	res, ok := m.App.Session.Get(r.Context(), "reservation").(models.Reservation)
+	if !ok {
+		helpers.ServerError(rw, errors.New("can't get reservation from session"))
+		return
+	}
+
+	// get the room by room-id to display it on the page
+	room, err := m.DB.GetRoomByID(res.RoomID)
+	if err != nil {
+		helpers.ServerError(rw, err)
+	}
+
+	// storing room name to reservation
+	res.Room.RoomName = room.RoomName
+
+	// converting time.Time formart to string to serve to html page
+	sd := res.StartDate.Format("2006-01-02")
+	ed := res.EndDate.Format("2006-01-02")
+
+	// passing it as a stringmap in templatedata so that html page can have access
+	dates := make(map[string]string)
+	dates["start_date"] = sd
+	dates["end_date"] = ed
 
 	data := make(map[string]interface{})
-	data["reservation"] = emptyReservation
+	data["reservation"] = res
 
 	render.Template(rw, r, "make-reservation.page.html", &models.TemplateData{
-		Form: forms.New(nil),
-		Data: data,
+		Form:      forms.New(nil),
+		StringMap: dates,
+		Data:      data,
 	})
 }
 
@@ -258,7 +282,7 @@ func (m *Repository) ReservationSummary(rw http.ResponseWriter, r *http.Request)
 	// doing type assert(added models.Reservation) to identify what type of session it is.
 	reservation, ok := m.App.Session.Get(r.Context(), "reservation").(models.Reservation)
 	if !ok {
-		m.App.ErrorLog.Println("can't get error from session")
+		m.App.ErrorLog.Println("get error from session")
 		// if a user directly went to /reservation-summary page directly then it will show empty page
 		// because of lack of session hence we have to show them something if they directly went to
 		// reservation-summary page

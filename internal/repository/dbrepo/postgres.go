@@ -3,6 +3,7 @@ package dbrepo
 
 import (
 	"context"
+	"log"
 	"time"
 
 	"github.com/prayagsingh/bookings/internal/models"
@@ -108,7 +109,7 @@ func (m *postgresDBRepo) SearchAvailabilityForAllRooms(start_date, end_date time
 	// creating context to make sure that the txn should not open for more than set time like adding a default timeout
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
-	
+
 	var rooms []models.Room
 	query := `select
 	 	r.id, r.room_name
@@ -126,7 +127,7 @@ func (m *postgresDBRepo) SearchAvailabilityForAllRooms(start_date, end_date time
 	for rows.Next() {
 		var room models.Room
 		err = rows.Scan(
-			&room.ID, 
+			&room.ID,
 			&room.RoomName,
 		)
 		if err != nil {
@@ -139,4 +140,23 @@ func (m *postgresDBRepo) SearchAvailabilityForAllRooms(start_date, end_date time
 		return rooms, err
 	}
 	return rooms, nil
+}
+
+// GetRoomByID get a room by roomID
+func (m *postgresDBRepo) GetRoomByID(roomID int) (models.Room, error) {
+
+	// creating context to make sure that the txn should not open for more than set time like adding a default timeout
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := `select id, room_name, created_at, updated_at from rooms where id = $1;`
+
+	var room models.Room
+	err := m.DB.QueryRowContext(ctx, query, roomID).Scan(&room.ID, &room.RoomName, &room.CreatedAt, &room.UpdatedAt)
+	if err != nil {
+		return room, err
+	}
+	log.Println("value of room is: ", room)
+	return room, nil
+
 }

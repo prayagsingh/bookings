@@ -6,81 +6,76 @@
     <div class="row">
         <div class="col">
 
-
-            <h1>Make a Reservation</h1>
-            <p><strong>Reservation Details</strong><br>
-            </p>
-
             <!-- storing the values of empty reservation in res when the first time this page is displayed -->
             <!-- here Data is of type Map in TemplateData struct and "reservation" is the key -->
             {{$res := index .Data "reservation"}}
-            <!--form action="/make-reservation" method="post" novalidate class="needs-validation"-->
-            <form action="/make-reservation" method="post" class="" novalidate>
 
-                <!-- to avoid BAD request and csrf issue -->
-                <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+            <h1>Make a Reservation</h1>
+            <p><strong>Reservation Details</strong><br>
+            <table class="table table-striped">
+                <strong> Room Name: </strong> {{$res.Room.RoomName}} <br>
+                <strong> Arrival: </strong> {{index .StringMap "start_date"}} <br>
+                <strong> Departure: </strong> {{index .StringMap "end_date"}}
+                </p>
 
-                <div class="col-md-4">
-                    <label for="first_name" class="form-label">First Name:</label>
-                    <!-- printing errors using server-side validation if the first_name is empty-->
-                    {{with .Form.Errors.Get "first_name"}}
-                    <!-- . below will displays whatever the value from form errors get -->
-                    <label class="text-danger">{{.}}</label>
-                    {{end}}
-                    <!-- showing warning sign in text-box at right side using go template pattern and is-invalid class -->
-                    <!-- `name` attribute must be present in `input` element to fetch the values from Form in go code -->
-                    <input name="first_name" type="text" class="form-control {{with .Form.Errors.Get " first_name"}}
-                        is-invalid {{end}}" id="first_name" value="{{$res.FirstName}}" autocomplete="off" required>
-                </div>
+                <!--form action="/make-reservation" method="post" novalidate class="needs-validation"-->
+                <form action="/make-reservation" method="post" class="" novalidate>
 
-                <div class="col-md-4">
-                    <label for="last_name" class="form-label">Last name:</label>
-                    {{with .Form.Errors.Get "last_name"}}
-                    <!-- . below will displays whatever the value from form errors get -->
-                    <label class="text-danger">{{.}}</label>
-                    {{end}}
-                    <input name="last_name" type="text" class="form-control {{with .Form.Errors.Get " last_name"}}
-                        is-invalid {{end}}" id="last_name" value="{{$res.LastName}}" autocomplete="off" required>
-                </div>
+                    <!-- to avoid BAD request and csrf issue -->
+                    <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+                    <!-- showing start-date and end-date at the top of the form-->
+                    <!-- make sure there is no space like " start_date" else it will result in unable to parse error-->
+                    <input type="hidden" name="start_date" id="start_date" value="{{index .StringMap "start_date"}}">
+                    <input type="hidden" name="end_date" id="end_date" value="{{index .StringMap "end_date"}}">
+                    <input type="hidden" name="room_id" id="room_id" value="{{$res.RoomID}}">
 
-                <div class="col-md-4">
-                    <label for="email" class="form-label">Email:</label>
-                    {{with .Form.Errors.Get "email"}}
-                    <!-- . below will displays whatever the value from form errors get -->
-                    <label class="text-danger">{{.}}</label>
-                    {{end}}
-                    <input name="email" type="email" class="form-control {{with .Form.Errors.Get " email"}} is-invalid
-                        {{end}}" id="email" value="{{$res.Email}}" autocomplete="off" required>
-                </div>
 
-                <div class="col-md-4">
-                    {{with .Form.Errors.Get "phone"}}
-                    <!-- . below will displays whatever the value from form errors get -->
-                    <label class="text-danger">{{.}}</label>
-                    {{end}}
-                    <label for="phone" class="form-label">Contact:</label>
-                    <input name="phone" type="text" class="form-control {{with .Form.Errors.Get " phone"}} is-invalid
-                        {{end}}" id="phone" value="{{$res.Phone}}" autocomplete="off" required>
-                </div>
+                    <div class="col-md-4">
+                        <label for="first_name" class="form-label">First Name:</label>
+                        <!-- printing errors using server-side validation if the first_name is empty-->
+                        {{with .Form.Errors.Get "first_name"}}
+                        <!-- . below will displays whatever the value from form errors get -->
+                        <label class="text-danger">{{.}}</label>
+                        {{end}}
+                        <!-- showing warning sign in text-box at right side using go template pattern and is-invalid class -->
+                        <!-- `name` attribute must be present in `input` element to fetch the values from Form in go code -->
+                        <input name="first_name" type="text" class="form-control {{with .Form.Errors.Get " first_name"}}
+                            is-invalid {{end}}" id="first_name" value="{{$res.FirstName}}" autocomplete="off" required>
+                    </div>
 
-                <div class="col-md-4">
-                    <label for="start_date" class="form-label">Start Date</label>
-                    <input name="start_date" type="date" class="form-control" id="start_date" value="{{$res.StartDate}}"
-                        autocomplete="off" required>
-                </div>
+                    <div class="col-md-4">
+                        <label for="last_name" class="form-label">Last name:</label>
+                        {{with .Form.Errors.Get "last_name"}}
+                        <!-- . below will displays whatever the value from form errors get -->
+                        <label class="text-danger">{{.}}</label>
+                        {{end}}
+                        <input name="last_name" type="text" class="form-control {{with .Form.Errors.Get " last_name"}}
+                            is-invalid {{end}}" id="last_name" value="{{$res.LastName}}" autocomplete="off" required>
+                    </div>
 
-                <div class="col-md-4">
-                    <label for="end_date" class="form-label">End Date</label>
-                    <input name="end_date" type="date" class="form-control" id="end_date" value="{{$res.EndDate}}"
-                        autocomplete="off" required>
-                </div>
+                    <div class="col-md-4">
+                        <label for="email" class="form-label">Email:</label>
+                        {{with .Form.Errors.Get "email"}}
+                        <!-- . below will displays whatever the value from form errors get -->
+                        <label class="text-danger">{{.}}</label>
+                        {{end}}
+                        <input name="email" type="email" class="form-control {{with .Form.Errors.Get " email"}}
+                            is-invalid {{end}}" id="email" value="{{$res.Email}}" autocomplete="off" required>
+                    </div>
 
-                <input type="hidden" name="room_id" value="1">
+                    <div class="col-md-4">
+                        {{with .Form.Errors.Get "phone"}}
+                        <!-- . below will displays whatever the value from form errors get -->
+                        <label class="text-danger">{{.}}</label>
+                        {{end}}
+                        <label for="phone" class="form-label">Contact:</label>
+                        <input name="phone" type="text" class="form-control {{with .Form.Errors.Get " phone"}}
+                            is-invalid {{end}}" id="phone" value="{{$res.Phone}}" autocomplete="off" required>
+                    </div>
+                    <hr>
+                    <input href type="submit" class="btn btn-primary" value="Make Reservation">
 
-                <hr>
-                <input href type="submit" class="btn btn-primary" value="Make Reservation">
-
-            </form>
+                </form>
         </div>
     </div>
 </div>
