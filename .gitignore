@@ -9,3 +9,4 @@ docker-postgres.yml
 schema.sql
 pgdata
 _pgdata
+test.html

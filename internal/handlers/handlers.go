@@ -302,7 +302,7 @@ func (m *Repository) ReservationSummary(rw http.ResponseWriter, r *http.Request)
 	})
 }
 
-// ChooseRoom
+// ChooseRoom displays list of available rooms
 func (m *Repository) ChooseRoom(rw http.ResponseWriter, r *http.Request) {
 
 	// we need to get the ID from chi router
