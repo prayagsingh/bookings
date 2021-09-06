@@ -7,7 +7,7 @@
             <!-- img-fluid makes image responsive-->
             <!-- ref: https://getbootstrap.com/docs/5.1/content/images/-->
             <img src="/static/images/suites.png" class="img-fluid img-thumbnail rounded mx-auto d-block room-image"
-                alt="suites image">
+                alt="villas image">
         </div>
     </div>
     <div class="row">
@@ -30,6 +30,7 @@
     <div class="row">
         <div class="col text-center">
             <!-- <button type="button" class="btn btn-success">Make Reservation Now</button> -->
+            <!-- #! means hash bang which means don't do anything -->
             <a href="#!" id="check-availability-button" class="btn btn-success">Check Availability</a>
         </div>
     </div>
@@ -37,6 +38,7 @@
 {{end}}
 
 {{define "js"}}
+
 <script>
     document.getElementById("check-availability-button").addEventListener("click", function () {
 
@@ -44,7 +46,7 @@
             <form id="check-availability-form" action="" method="POST" novalidate class="needs-validation search-form">
                 <div class="row">
                 <div class="col">
-                    <div class="row" id="reservations-date-modals">
+                    <div class="row" id="reservation-date-modal">
                         <div class="col d-line p-4 shadow-none">
                         <input disabled required type="text" class="form-control" name="start" id="start" placeholder="Arrival">
                         </div>
@@ -56,13 +58,64 @@
                 </div>
             </form>
         `
-        // notify("Notified Successfully", "success");
-        //notifyModal("title", "<em>hello world</em>", "success", "text for the button")
+        attention.custom({
+            msg: html,
+            title: "Choose your dates",
 
-        //attention.toast({msg: "hello world", icon: "error", timer: 2000});
-        //attention.icon({msg: "hello world", icon: "success"});
-        //attention.icon({msg: "hello world", icon: "error"});
-        attention.custom({ msg: html, title: "Choose your dates" });
+            // this will open the calender for the pop-up when clicked on the button. using `disabled` in input tag to undo this.
+            willOpen: () => {
+                const elem = document.getElementById('reservation-date-modal')
+                const rp = new DateRangePicker(elem, {
+                    format: "yyyy-mm-dd",
+                    showOnFocus: true,
+                    minDate: new Date(),
+                })
+            },
+
+            didOpen: () => {
+                document.getElementById('start').removeAttribute("disabled");
+                document.getElementById('end').removeAttribute("disabled");
+            },
+
+            callback: function(result){
+                console.log("called");
+
+                let form = document.getElementById("check-availability-form");
+                    let formData = new FormData(form);
+                    formData.append("csrf_token", "{{.CSRFToken}}");
+                    formData.append("room_id", "2");
+
+                    fetch('/search-availability-json', {
+                        method: "post",
+                        body: formData,
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.ok) {
+                            attention.custom({
+                                icon: "success",
+                                // redirecting rooms reservation to next page when the user clicks on "room is available popup"
+
+                                msg: '<p> Room is available </p>'
+                                    + '<p><a href="/book-room?id='
+                                    + data.room_id
+                                    + '&s='
+                                    + data.start_date
+                                    + '&e='
+                                    + data.end_date    
+                                    + '" class="btn btn-primary">'
+                                    + 'Book Now !</a></p>',
+                                showConfirmButton: false,
+                            })
+                        } else {
+                            attention.error({
+                                msg: "no room is available !!",
+                            });
+                        }                        
+                    })
+            },
+
+        });
 
     })
 </script>

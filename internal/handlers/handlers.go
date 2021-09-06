@@ -61,6 +61,8 @@ func (m *Repository) About(rw http.ResponseWriter, r *http.Request) {
 // Reservations renders a make a reservation page and displays form
 func (m *Repository) Reservations(rw http.ResponseWriter, r *http.Request) {
 
+	// if we try to access /make-reservation directly then it will result in session error
+	// because earlier we were creating an empty reservation
 	res, ok := m.App.Session.Get(r.Context(), "reservation").(models.Reservation)
 	if !ok {
 		helpers.ServerError(rw, errors.New("can't get reservation from session"))
@@ -270,11 +272,11 @@ func (m *Repository) AvailabilityJSON(rw http.ResponseWriter, r *http.Request) {
 
 	// making json resp dynamic based on the response we get from the DB .i.e whether room is available for not
 	resp := jsonResponse{
-		OK:      available,
-		Message: "",
+		OK:        available,
+		Message:   "",
 		StartDate: sd,
-		EndDate: ed,
-		RoomID: strconv.Itoa(roomID),
+		EndDate:   ed,
+		RoomID:    strconv.Itoa(roomID),
 	}
 
 	out, err := json.MarshalIndent(resp, "", "  ")
@@ -293,7 +295,7 @@ func (m *Repository) Contact(rw http.ResponseWriter, r *http.Request) {
 	render.Template(rw, r, "contact.page.html", &models.TemplateData{})
 }
 
-// ReservationSummary
+// ReservationSummary displays the reservation summary page
 func (m *Repository) ReservationSummary(rw http.ResponseWriter, r *http.Request) {
 
 	// doing type assert(added models.Reservation) to identify what type of session it is.
@@ -352,5 +354,46 @@ func (m *Repository) ChooseRoom(rw http.ResponseWriter, r *http.Request) {
 	m.App.Session.Put(r.Context(), "reservation", res)
 
 	// redirecting to make-reservation page
+	http.Redirect(rw, r, "/make-reservation", http.StatusSeeOther)
+}
+
+// BookRoom takes URL parameter, build a sessional variable and take user to reservation screen
+func (m *Repository) BookRoom(rw http.ResponseWriter, r *http.Request) {
+
+	// fetch the id, sd, ed from url
+	roomID, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil {
+		helpers.ServerError(rw, err)
+	}
+	sd := r.URL.Query().Get("s")
+	ed := r.URL.Query().Get("e")
+
+	// storing above details in session
+	var reservation models.Reservation
+
+	layout := "2006-01-02"
+	startDate, err := time.Parse(layout, sd)
+	if err != nil {
+		helpers.ServerError(rw, err)
+	}
+
+	endDate, err := time.Parse(layout, ed)
+	if err != nil {
+		helpers.ServerError(rw, err)
+	}
+
+	// get the room by room-id to display it on the page
+	room, err := m.DB.GetRoomByID(roomID)
+	if err != nil {
+		helpers.ServerError(rw, err)
+	}
+
+	reservation.RoomID = roomID
+	reservation.Room.RoomName = room.RoomName
+	reservation.StartDate = startDate
+	reservation.EndDate = endDate
+
+	m.App.Session.Put(r.Context(), "reservation", reservation)
+
 	http.Redirect(rw, r, "/make-reservation", http.StatusSeeOther)
 }
