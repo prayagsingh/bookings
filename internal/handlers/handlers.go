@@ -236,15 +236,45 @@ func (m *Repository) PostAvailability(rw http.ResponseWriter, r *http.Request) {
 
 // AvailabiltyJSON is using it to build JSON response. Scope is limited
 type jsonResponse struct {
-	OK      bool   `json:"ok"`
-	Message string `json:"message"`
+	OK        bool   `json:"ok"`
+	Message   string `json:"message"`
+	RoomID    string `json:"room_id"`
+	StartDate string `json:"start_date"`
+	EndDate   string `json:"end_date"`
 }
 
 // AvailabilityJSON handles request for availability and sends JSON response.
 func (m *Repository) AvailabilityJSON(rw http.ResponseWriter, r *http.Request) {
+
+	// fetching start_date and end_date from the form
+	sd := r.Form.Get("start")
+	ed := r.Form.Get("end")
+	roomID, _ := strconv.Atoi(r.Form.Get("room_id"))
+
+	// convert dates to time.Time format from string
+	layout := "2006-01-02"
+
+	startDate, err := time.Parse(layout, sd)
+	if err != nil {
+		helpers.ServerError(rw, err)
+	}
+	endDate, err := time.Parse(layout, ed)
+	if err != nil {
+		helpers.ServerError(rw, err)
+	}
+
+	available, err := m.DB.SearchAvailabilityByDatesByRoomID(startDate, endDate, roomID)
+	if err != nil {
+		helpers.ServerError(rw, err)
+	}
+
+	// making json resp dynamic based on the response we get from the DB .i.e whether room is available for not
 	resp := jsonResponse{
-		OK:      true,
-		Message: "Available!",
+		OK:      available,
+		Message: "",
+		StartDate: sd,
+		EndDate: ed,
+		RoomID: strconv.Itoa(roomID),
 	}
 
 	out, err := json.MarshalIndent(resp, "", "  ")
