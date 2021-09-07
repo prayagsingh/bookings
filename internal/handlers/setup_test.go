@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"testing"
 	"time"
 
 	"github.com/alexedwards/scs/v2"
@@ -24,7 +25,7 @@ var session *scs.SessionManager
 var pathToTemplates = "./../../templates"
 var functions = template.FuncMap{}
 
-func getRoutes() http.Handler {
+func TestMain(m *testing.M) {
 
 	// storing info to Session
 	gob.Register(models.Reservation{})
@@ -66,10 +67,15 @@ func getRoutes() http.Handler {
 	app.UseCache = true
 
 	// This allow Handler functions to have access to appConfig via repository
-	repo := NewRepo(&app, nil)
+	repo := NewTestRepo(&app)
 	NewHandler(repo)
 
 	render.NewRenderer(&app)
+
+	os.Exit(m.Run())
+}
+
+func getRoutes() http.Handler {
 
 	mux := chi.NewRouter()
 	mux.Use(middleware.Recoverer)
